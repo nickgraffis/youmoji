@@ -1,22 +1,58 @@
-const domtoimage = require('dom-to-image');
-const FileSaver = require('file-saver');
-const Sortable = require('sortablejs');
+const domtoimage = require('dom-to-image')
+const FileSaver = require('file-saver')
+const Sortable = require('sortablejs')
+const optionsArea = document.querySelector('#options')
+const sort = document.querySelector('#pieces')
+var showModal = false
+var customCounter = 0
+var darkModeClass
+var parts
 
-twemoji.parse(document.body);
+/*
+* Change HTML class from dark to light
+*/
+const toggleDarkMode = (mode) => {
+  var root = document.getElementsByTagName( 'html' )[0]
+  root.setAttribute( 'class', mode )
+  darkModeClass = mode
+  twemoji.parse(document.querySelector('#dm'))
+}
 
-var customCounter = 0;
+/*
+* Check if user's prefered color scheme is set to dark or not
+*/
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  toggleDarkMode('dark')
+} else {
+  toggleDarkMode('light')
+}
 
-let parts = document.querySelectorAll('.part')
-function checkForParts() {
+/*
+* Manually change color scheme
+*/
+window.darkMode = () => {
+  if (darkModeClass == 'dark') {
+    document.querySelector('#dm').innerHTML = '☀️'
+    toggleDarkMode('light')
+  } else {
+    document.querySelector('#dm').innerHTML = '🌙'
+    toggleDarkMode('dark')
+  }
+}
+
+/*
+* Search document for parts to addEventListener
+*/
+const checkForParts = () => {
   parts = document.querySelectorAll('.part')
   parts.forEach((part) => {
     part.addEventListener('click', partsListen)
   })
 }
 const partsListen = (event) => {
+  event.target.removeEventListener('click', partsListen)
   document.querySelector('#text').classList.add('hidden')
   let img = event.target
-  event.target.removeEventListener('click', partsListen)
   let outer = document.createElement('DIV')
   let piece = event.target.parentNode.cloneNode(true)
   let pw = document.createElement('DIV')
@@ -31,7 +67,7 @@ const partsListen = (event) => {
   let trash = document.createElement('DIV')
   trash.classList = 'h-10 w-10 flex mx-1 items-center justify-center p-1 hover:bg-gray-200 cursor-pointer rounded-full transform duration-150 hover:-rotate-12 hover:scale-110 icon'
   trash.innerHTML = '🗑️'
-  twemoji.parse(trash);
+  twemoji.parse(trash)
   op.append(drag)
   op.append(trash)
   pw.append(op)
@@ -41,27 +77,35 @@ const partsListen = (event) => {
   img.style.zIndex = 50 + (currentZ.length + 1)
   img.classList = 'absolute emoji-big animate'
   document.querySelector('#staging').prepend(img)
+  confetti({
+    angle: 75,
+    origin: { x: 0 }
+  })
   trash.addEventListener('click', (event) => {
     let key = event.target.parentNode.parentNode.parentNode.id.split('-')
     let img = document.querySelector('#img-' + key[1] + '-' + key[2])
-    img.style.width = '110%'
-    img.classList = 'part transform duration-150 hover:-rotate-12 hover:scale-110'
-    let home = document.querySelector('#div-' + key[1] + '-' + key[2])
-    if (home) {
-      home.append(img)
+    if (img) {
+      img.style.width = '110%'
+      img.classList = 'part transform duration-150 hover:-rotate-12 hover:scale-110'
+      let home = document.querySelector('#div-' + key[1] + '-' + key[2])
+      if (home) {
+        home.append(img)
+      }
+      event.target.parentNode.parentNode.parentNode.remove()
     }
-    event.target.parentNode.parentNode.parentNode.remove()
     checkForParts()
   })
 }
-const optionsArea = document.querySelector('#options')
-var showModal = false
-window.createCustom = function () {
+
+/*
+* Show modal for custom SVG code
+*/
+window.createCustom = () => {
   if (!showModal) {
-    let modal = document.createElement('DIV');
-    modal.classList = 'fixed inset-0 overflow-y-auto';
-    modal.style.zIndex = 100;
-    modal.id = 'modal';
+    let modal = document.createElement('DIV')
+    modal.classList = 'fixed inset-0 overflow-y-auto'
+    modal.style.zIndex = 100
+    modal.id = 'modal'
     modal.innerHTML = `
     <div style="font-family: 'Sniglet', cursive;" class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0 bg-gray-800 bg-opacity-75">
       <div class="fixed inset-0 transition-opacity" aria-hidden="true">
@@ -77,49 +121,47 @@ window.createCustom = function () {
       </div>
     </div>
     `
-    twemoji.parse(modal);
-    document.body.prepend(modal);
+    twemoji.parse(modal)
+    document.body.prepend(modal)
   } else {
-    document.querySelector('#modal').remove();
+    document.querySelector('#modal').remove()
   }
-  showModal = !showModal;
+  showModal = !showModal
 }
-window.uploadCustom = function () {
+
+/*
+* Parse the svg text and turn into base64 and create a new image in the DOM
+*/
+window.uploadCustom = () => {
   let faces = document.querySelector('#customText').value
-  document.querySelector('#modal').remove();
-  showModal = !showModal;
+  document.querySelector('#modal').remove()
+  showModal = !showModal
   let face
   for (let i = 0; i < faces.length; i++) {
-    console.log(i)
     if ((faces[i] + faces[i + 1] + faces[i + 2] + faces[i + 3]) === '<svg') {
-      face = [];
+      face = []
       face.push(faces[i] + faces[i + 1] + faces[i + 2] + faces[i + 3])
       if (!faces.includes('xmlns="http://www.w3.org/2000/svg"')) {
         face.push(' xmlns="http://www.w3.org/2000/svg"')
       }
       let s = i + 4
       while (faces[s] + faces[s + 1] + faces[s + 2] + faces[s + 3] + faces[s + 4] + faces[s + 5] != '</svg>') {
-        console.log(faces[s])
         face.push(faces[s])
         s++
       }
       face.push(faces[s] + faces[s + 1] + faces[s + 2] + faces[s + 3] + faces[s + 4] + faces[s + 5])
       i = s + 5
     } else {
-      continue;
+      continue
     }
   }
   let div = document.createElement('DIV')
   div.id = 'div-' + 'custom' + '-' + customCounter
   let img = document.createElement('IMG')
-  // Remove any characters outside the Latin1 range
-  var decoded = unescape(encodeURIComponent(face.join('')));
-
-  // Now we can use btoa to convert the svg to base64
-  var base64 = btoa(decoded);
-
-  var imgSource = `data:image/svg+xml;base64,${base64}`;
-  img.src = imgSource;
+  let decoded = unescape(encodeURIComponent(face.join('')))
+  let base64 = btoa(decoded)
+  let imgSource = `data:image/svg+xml;base64,${base64}`
+  img.src = imgSource
   img.style.width = '110%'
   img.id = 'img-' + 'custom' + '-' + customCounter
   img.classList = 'part transform duration-150 hover:-rotate-12 hover:scale-110 active:scale-75'
@@ -130,20 +172,28 @@ window.uploadCustom = function () {
   checkForParts()
 }
 
-function imageExists(image_url){
-
-    var http = new XMLHttpRequest();
-
-    http.open('HEAD', image_url, false);
-    http.send();
-
-    return http.status != 404;
-
-}
-
-window.fillOptions = function (key) {
+/*
+* Fill area with parts to choose from
+*/
+window.fillOptions = (key) => {
+  const imageExists = (image_url) => {
+    let http = new XMLHttpRequest()
+    http.open('HEAD', image_url, false)
+    http.send()
+    return http.status != 404
+  }
   optionsArea.innerHTML = ''
-  for (let i = 1; i < 100; i++) {
+  let amount
+  if (key == 'head') {
+    amount = 60
+  } else if (key == 'eye') {
+    amount = 49
+  } else if (key == 'mouth') {
+    amount = 40
+  } else if (key == 'topper') {
+    amount = 26
+  }
+  for (let i = 1; i < amount; i++) {
     let div = document.createElement('DIV')
     div.id = 'div-' + key + '-' + i
     let img = document.createElement('IMG')
@@ -162,6 +212,9 @@ window.fillOptions = function (key) {
   checkForParts()
 }
 
+/*
+* Listen for the reset command
+*/
 document.querySelector('#reset').addEventListener("click", () => {
   let staging = document.querySelector('#staging')
   staging.querySelectorAll('img').forEach((img) => {
@@ -178,15 +231,20 @@ document.querySelector('#reset').addEventListener("click", () => {
   checkForParts()
 })
 
+/*
+* Listen for the download command
+*/
 document.querySelector('#download').addEventListener("click", () => {
   domtoimage.toBlob(document.getElementById('staging'))
-    .then(function (blob) {
-      let name = document.querySelector('#name') ? document.querySelector('#name').value : 'youmoji'
-        FileSaver.saveAs(blob, name + '.png');
-    });
+    .then((blob) => {
+      let name = document.querySelector('#name').value ? document.querySelector('#name').value : 'youmoji'
+        FileSaver.saveAs(blob, name + '.png')
+    })
 })
 
-const sort = document.querySelector('#pieces')
+/*
+* Allow sorting of the parts
+*/
 const sortable = Sortable.create(sort, {
     animation: 150,
     easing: "cubic-bezier(1, 0, 0, 1)",
@@ -197,8 +255,13 @@ const sortable = Sortable.create(sort, {
           } else {
             let key = child.id.split('-')
             let img = document.querySelector('#img-' + key[1] + '-' + key[2])
-            img.style.zIndex = 50 - i
+            if (img) {
+              img.style.zIndex = 50 - i
+            }
           }
         })
   	},
-});
+})
+
+twemoji.parse(document.body)
+fillOptions('head')

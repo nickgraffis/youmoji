@@ -1,23 +1,59 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-const domtoimage = require('dom-to-image');
-const FileSaver = require('file-saver');
-const Sortable = require('sortablejs');
+const domtoimage = require('dom-to-image')
+const FileSaver = require('file-saver')
+const Sortable = require('sortablejs')
+const optionsArea = document.querySelector('#options')
+const sort = document.querySelector('#pieces')
+var showModal = false
+var customCounter = 0
+var darkModeClass
+var parts
 
-twemoji.parse(document.body);
+/*
+* Change HTML class from dark to light
+*/
+const toggleDarkMode = (mode) => {
+  var root = document.getElementsByTagName( 'html' )[0]
+  root.setAttribute( 'class', mode )
+  darkModeClass = mode
+  twemoji.parse(document.querySelector('#dm'))
+}
 
-var customCounter = 0;
+/*
+* Check if user's prefered color scheme is set to dark or not
+*/
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  toggleDarkMode('dark')
+} else {
+  toggleDarkMode('light')
+}
 
-let parts = document.querySelectorAll('.part')
-function checkForParts() {
+/*
+* Manually change color scheme
+*/
+window.darkMode = () => {
+  if (darkModeClass == 'dark') {
+    document.querySelector('#dm').innerHTML = '☀️'
+    toggleDarkMode('light')
+  } else {
+    document.querySelector('#dm').innerHTML = '🌙'
+    toggleDarkMode('dark')
+  }
+}
+
+/*
+* Search document for parts to addEventListener
+*/
+const checkForParts = () => {
   parts = document.querySelectorAll('.part')
   parts.forEach((part) => {
     part.addEventListener('click', partsListen)
   })
 }
 const partsListen = (event) => {
+  event.target.removeEventListener('click', partsListen)
   document.querySelector('#text').classList.add('hidden')
   let img = event.target
-  event.target.removeEventListener('click', partsListen)
   let outer = document.createElement('DIV')
   let piece = event.target.parentNode.cloneNode(true)
   let pw = document.createElement('DIV')
@@ -32,7 +68,7 @@ const partsListen = (event) => {
   let trash = document.createElement('DIV')
   trash.classList = 'h-10 w-10 flex mx-1 items-center justify-center p-1 hover:bg-gray-200 cursor-pointer rounded-full transform duration-150 hover:-rotate-12 hover:scale-110 icon'
   trash.innerHTML = '🗑️'
-  twemoji.parse(trash);
+  twemoji.parse(trash)
   op.append(drag)
   op.append(trash)
   pw.append(op)
@@ -42,27 +78,35 @@ const partsListen = (event) => {
   img.style.zIndex = 50 + (currentZ.length + 1)
   img.classList = 'absolute emoji-big animate'
   document.querySelector('#staging').prepend(img)
+  confetti({
+    angle: 75,
+    origin: { x: 0 }
+  })
   trash.addEventListener('click', (event) => {
     let key = event.target.parentNode.parentNode.parentNode.id.split('-')
     let img = document.querySelector('#img-' + key[1] + '-' + key[2])
-    img.style.width = '110%'
-    img.classList = 'part transform duration-150 hover:-rotate-12 hover:scale-110'
-    let home = document.querySelector('#div-' + key[1] + '-' + key[2])
-    if (home) {
-      home.append(img)
+    if (img) {
+      img.style.width = '110%'
+      img.classList = 'part transform duration-150 hover:-rotate-12 hover:scale-110'
+      let home = document.querySelector('#div-' + key[1] + '-' + key[2])
+      if (home) {
+        home.append(img)
+      }
+      event.target.parentNode.parentNode.parentNode.remove()
     }
-    event.target.parentNode.parentNode.parentNode.remove()
     checkForParts()
   })
 }
-const optionsArea = document.querySelector('#options')
-var showModal = false
-window.createCustom = function () {
+
+/*
+* Show modal for custom SVG code
+*/
+window.createCustom = () => {
   if (!showModal) {
-    let modal = document.createElement('DIV');
-    modal.classList = 'fixed inset-0 overflow-y-auto';
-    modal.style.zIndex = 100;
-    modal.id = 'modal';
+    let modal = document.createElement('DIV')
+    modal.classList = 'fixed inset-0 overflow-y-auto'
+    modal.style.zIndex = 100
+    modal.id = 'modal'
     modal.innerHTML = `
     <div style="font-family: 'Sniglet', cursive;" class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0 bg-gray-800 bg-opacity-75">
       <div class="fixed inset-0 transition-opacity" aria-hidden="true">
@@ -78,49 +122,47 @@ window.createCustom = function () {
       </div>
     </div>
     `
-    twemoji.parse(modal);
-    document.body.prepend(modal);
+    twemoji.parse(modal)
+    document.body.prepend(modal)
   } else {
-    document.querySelector('#modal').remove();
+    document.querySelector('#modal').remove()
   }
-  showModal = !showModal;
+  showModal = !showModal
 }
-window.uploadCustom = function () {
+
+/*
+* Parse the svg text and turn into base64 and create a new image in the DOM
+*/
+window.uploadCustom = () => {
   let faces = document.querySelector('#customText').value
-  document.querySelector('#modal').remove();
-  showModal = !showModal;
+  document.querySelector('#modal').remove()
+  showModal = !showModal
   let face
   for (let i = 0; i < faces.length; i++) {
-    console.log(i)
     if ((faces[i] + faces[i + 1] + faces[i + 2] + faces[i + 3]) === '<svg') {
-      face = [];
+      face = []
       face.push(faces[i] + faces[i + 1] + faces[i + 2] + faces[i + 3])
       if (!faces.includes('xmlns="http://www.w3.org/2000/svg"')) {
         face.push(' xmlns="http://www.w3.org/2000/svg"')
       }
       let s = i + 4
       while (faces[s] + faces[s + 1] + faces[s + 2] + faces[s + 3] + faces[s + 4] + faces[s + 5] != '</svg>') {
-        console.log(faces[s])
         face.push(faces[s])
         s++
       }
       face.push(faces[s] + faces[s + 1] + faces[s + 2] + faces[s + 3] + faces[s + 4] + faces[s + 5])
       i = s + 5
     } else {
-      continue;
+      continue
     }
   }
   let div = document.createElement('DIV')
   div.id = 'div-' + 'custom' + '-' + customCounter
   let img = document.createElement('IMG')
-  // Remove any characters outside the Latin1 range
-  var decoded = unescape(encodeURIComponent(face.join('')));
-
-  // Now we can use btoa to convert the svg to base64
-  var base64 = btoa(decoded);
-
-  var imgSource = `data:image/svg+xml;base64,${base64}`;
-  img.src = imgSource;
+  let decoded = unescape(encodeURIComponent(face.join('')))
+  let base64 = btoa(decoded)
+  let imgSource = `data:image/svg+xml;base64,${base64}`
+  img.src = imgSource
   img.style.width = '110%'
   img.id = 'img-' + 'custom' + '-' + customCounter
   img.classList = 'part transform duration-150 hover:-rotate-12 hover:scale-110 active:scale-75'
@@ -131,20 +173,28 @@ window.uploadCustom = function () {
   checkForParts()
 }
 
-function imageExists(image_url){
-
-    var http = new XMLHttpRequest();
-
-    http.open('HEAD', image_url, false);
-    http.send();
-
-    return http.status != 404;
-
-}
-
-window.fillOptions = function (key) {
+/*
+* Fill area with parts to choose from
+*/
+window.fillOptions = (key) => {
+  const imageExists = (image_url) => {
+    let http = new XMLHttpRequest()
+    http.open('HEAD', image_url, false)
+    http.send()
+    return http.status != 404
+  }
   optionsArea.innerHTML = ''
-  for (let i = 1; i < 100; i++) {
+  let amount
+  if (key == 'head') {
+    amount = 60
+  } else if (key == 'eye') {
+    amount = 49
+  } else if (key == 'mouth') {
+    amount = 40
+  } else if (key == 'topper') {
+    amount = 26
+  }
+  for (let i = 1; i < amount; i++) {
     let div = document.createElement('DIV')
     div.id = 'div-' + key + '-' + i
     let img = document.createElement('IMG')
@@ -163,6 +213,9 @@ window.fillOptions = function (key) {
   checkForParts()
 }
 
+/*
+* Listen for the reset command
+*/
 document.querySelector('#reset').addEventListener("click", () => {
   let staging = document.querySelector('#staging')
   staging.querySelectorAll('img').forEach((img) => {
@@ -179,15 +232,20 @@ document.querySelector('#reset').addEventListener("click", () => {
   checkForParts()
 })
 
+/*
+* Listen for the download command
+*/
 document.querySelector('#download').addEventListener("click", () => {
   domtoimage.toBlob(document.getElementById('staging'))
-    .then(function (blob) {
-      let name = document.querySelector('#name') ? document.querySelector('#name').value : 'youmoji'
-        FileSaver.saveAs(blob, name + '.png');
-    });
+    .then((blob) => {
+      let name = document.querySelector('#name').value ? document.querySelector('#name').value : 'youmoji'
+        FileSaver.saveAs(blob, name + '.png')
+    })
 })
 
-const sort = document.querySelector('#pieces')
+/*
+* Allow sorting of the parts
+*/
 const sortable = Sortable.create(sort, {
     animation: 150,
     easing: "cubic-bezier(1, 0, 0, 1)",
@@ -198,11 +256,16 @@ const sortable = Sortable.create(sort, {
           } else {
             let key = child.id.split('-')
             let img = document.querySelector('#img-' + key[1] + '-' + key[2])
-            img.style.zIndex = 50 - i
+            if (img) {
+              img.style.zIndex = 50 - i
+            }
           }
         })
   	},
-});
+})
+
+twemoji.parse(document.body)
+fillOptions('head')
 
 },{"dom-to-image":2,"file-saver":3,"sortablejs":4}],2:[function(require,module,exports){
 (function (global) {
@@ -976,11 +1039,11 @@ const sortable = Sortable.create(sort, {
 })(this);
 
 },{}],3:[function(require,module,exports){
-(function (global){(function (){
+(function (global){
 (function(a,b){if("function"==typeof define&&define.amd)define([],b);else if("undefined"!=typeof exports)b();else{b(),a.FileSaver={exports:{}}.exports}})(this,function(){"use strict";function b(a,b){return"undefined"==typeof b?b={autoBom:!1}:"object"!=typeof b&&(console.warn("Deprecated: Expected third argument to be a object"),b={autoBom:!b}),b.autoBom&&/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(a.type)?new Blob(["\uFEFF",a],{type:a.type}):a}function c(a,b,c){var d=new XMLHttpRequest;d.open("GET",a),d.responseType="blob",d.onload=function(){g(d.response,b,c)},d.onerror=function(){console.error("could not download file")},d.send()}function d(a){var b=new XMLHttpRequest;b.open("HEAD",a,!1);try{b.send()}catch(a){}return 200<=b.status&&299>=b.status}function e(a){try{a.dispatchEvent(new MouseEvent("click"))}catch(c){var b=document.createEvent("MouseEvents");b.initMouseEvent("click",!0,!0,window,0,0,0,80,20,!1,!1,!1,!1,0,null),a.dispatchEvent(b)}}var f="object"==typeof window&&window.window===window?window:"object"==typeof self&&self.self===self?self:"object"==typeof global&&global.global===global?global:void 0,a=f.navigator&&/Macintosh/.test(navigator.userAgent)&&/AppleWebKit/.test(navigator.userAgent)&&!/Safari/.test(navigator.userAgent),g=f.saveAs||("object"!=typeof window||window!==f?function(){}:"download"in HTMLAnchorElement.prototype&&!a?function(b,g,h){var i=f.URL||f.webkitURL,j=document.createElement("a");g=g||b.name||"download",j.download=g,j.rel="noopener","string"==typeof b?(j.href=b,j.origin===location.origin?e(j):d(j.href)?c(b,g,h):e(j,j.target="_blank")):(j.href=i.createObjectURL(b),setTimeout(function(){i.revokeObjectURL(j.href)},4E4),setTimeout(function(){e(j)},0))}:"msSaveOrOpenBlob"in navigator?function(f,g,h){if(g=g||f.name||"download","string"!=typeof f)navigator.msSaveOrOpenBlob(b(f,h),g);else if(d(f))c(f,g,h);else{var i=document.createElement("a");i.href=f,i.target="_blank",setTimeout(function(){e(i)})}}:function(b,d,e,g){if(g=g||open("","_blank"),g&&(g.document.title=g.document.body.innerText="downloading..."),"string"==typeof b)return c(b,d,e);var h="application/octet-stream"===b.type,i=/constructor/i.test(f.HTMLElement)||f.safari,j=/CriOS\/[\d]+/.test(navigator.userAgent);if((j||h&&i||a)&&"undefined"!=typeof FileReader){var k=new FileReader;k.onloadend=function(){var a=k.result;a=j?a:a.replace(/^data:[^;]*;/,"data:attachment/file;"),g?g.location.href=a:location=a,g=null},k.readAsDataURL(b)}else{var l=f.URL||f.webkitURL,m=l.createObjectURL(b);g?g.location=m:location.href=m,g=null,setTimeout(function(){l.revokeObjectURL(m)},4E4)}});f.saveAs=g.saveAs=g,"undefined"!=typeof module&&(module.exports=g)});
 
 
-}).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],4:[function(require,module,exports){
 /**!
  * Sortable 1.13.0
