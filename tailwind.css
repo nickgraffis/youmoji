@@ -30,6 +30,11 @@ Use a more readable tab size (opinionated).
 2. Prevent adjustments of font size after orientation changes in iOS.
 */
 
+html {
+  line-height: 1.15; /* 1 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+}
+
 /*
 Sections
 ========
@@ -39,9 +44,26 @@ Sections
 Remove the margin in all browsers.
 */
 
+body {
+  margin: 0;
+}
+
 /**
 Improve consistency of default fonts in all browsers. (https://github.com/sindresorhus/modern-normalize/issues/3)
 */
+
+body {
+  font-family:
+		system-ui,
+		-apple-system, /* Firefox supports this but not yet `system-ui` */
+		'Segoe UI',
+		Roboto,
+		Helvetica,
+		Arial,
+		sans-serif,
+		'Apple Color Emoji',
+		'Segoe UI Emoji';
+}
 
 /*
 Grouping content
@@ -53,6 +75,11 @@ Grouping content
 2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)
 */
 
+hr {
+  height: 0; /* 1 */
+  color: inherit; /* 2 */
+}
+
 /*
 Text-level semantics
 ====================
@@ -62,22 +89,66 @@ Text-level semantics
 Add the correct text decoration in Chrome, Edge, and Safari.
 */
 
+abbr[title] {
+  -webkit-text-decoration: underline dotted;
+          text-decoration: underline dotted;
+}
+
 /**
 Add the correct font weight in Edge and Safari.
 */
+
+b,
+strong {
+  font-weight: bolder;
+}
 
 /**
 1. Improve consistency of default fonts in all browsers. (https://github.com/sindresorhus/modern-normalize/issues/3)
 2. Correct the odd 'em' font sizing in all browsers.
 */
 
+code,
+kbd,
+samp,
+pre {
+  font-family:
+		ui-monospace,
+		SFMono-Regular,
+		Consolas,
+		'Liberation Mono',
+		Menlo,
+		monospace; /* 1 */
+  font-size: 1em; /* 2 */
+}
+
 /**
 Add the correct font size in all browsers.
 */
 
+small {
+  font-size: 80%;
+}
+
 /**
 Prevent 'sub' and 'sup' elements from affecting the line height in all browsers.
 */
+
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+sup {
+  top: -0.5em;
+}
 
 /*
 Tabular data
@@ -89,6 +160,11 @@ Tabular data
 2. Correct table border color inheritance in all Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=935729, https://bugs.webkit.org/show_bug.cgi?id=195016)
 */
 
+table {
+  text-indent: 0; /* 1 */
+  border-color: inherit; /* 2 */
+}
+
 /*
 Forms
 =====
@@ -99,14 +175,36 @@ Forms
 2. Remove the margin in Firefox and Safari.
 */
 
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit; /* 1 */
+  font-size: 100%; /* 1 */
+  line-height: 1.15; /* 1 */
+  margin: 0; /* 2 */
+}
+
 /**
 Remove the inheritance of text transform in Edge and Firefox.
 1. Remove the inheritance of text transform in Firefox.
 */
 
+button,
+select { /* 1 */
+  text-transform: none;
+}
+
 /**
 Correct the inability to style clickable types in iOS and Safari.
 */
+
+button,
+[type='button'],
+[type='reset'] {
+  -webkit-appearance: button;
+}
 
 /**
 Remove the inner border and padding in Firefox.
@@ -125,9 +223,17 @@ See: https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d4
 Remove the padding so developers are not caught out when they zero out 'fieldset' elements in all browsers.
 */
 
+legend {
+  padding: 0;
+}
+
 /**
 Add the correct vertical alignment in Chrome and Firefox.
 */
+
+progress {
+  vertical-align: baseline;
+}
 
 /**
 Correct the cursor style of increment and decrement buttons in Safari.
@@ -156,6 +262,10 @@ Interactive
 Add the correct display in Chrome and Safari.
 */
 
+summary {
+  display: list-item;
+}
+
 /**
  * Manually forked from SUIT CSS Base: https://github.com/suitcss/base
  * A thin layer on top of normalize.css that provides a starting point more
@@ -166,10 +276,48 @@ Add the correct display in Chrome and Safari.
  * Removes the default spacing and border for appropriate elements.
  */
 
+blockquote,
+dl,
+dd,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+figure,
+p,
+pre {
+  margin: 0;
+}
+
+button {
+  background-color: transparent;
+  background-image: none;
+}
+
 /**
  * Work around a Firefox/IE bug where the transparent `button` background
  * results in a loss of the default `button` focus styles.
  */
+
+button:focus {
+  outline: 1px dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+ol,
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
 
 /**
  * Tailwind custom reset styles
@@ -182,10 +330,20 @@ Add the correct display in Chrome and Safari.
  *    to override it to ensure consistency even when using the default theme.
  */
 
+html {
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* 1 */
+  line-height: 1.5; /* 2 */
+}
+
 /**
  * Inherit font-family and line-height from `html` so users can set them as
  * a class directly on the `html` element.
  */
+
+body {
+  font-family: inherit;
+  line-height: inherit;
+}
 
 /**
  * 1. Prevent padding and border from affecting element width.
@@ -226,6 +384,10 @@ Add the correct display in Chrome and Safari.
  * Ensure horizontal rules are visible by default
  */
 
+hr {
+  border-top-width: 1px;
+}
+
 /**
  * Undo the `border-style: none` reset that Normalize applies to images so that
  * our `border-{width}` utilities have the expected effect.
@@ -236,10 +398,55 @@ Add the correct display in Chrome and Safari.
  * https://github.com/tailwindcss/tailwindcss/issues/362
  */
 
+img {
+  border-style: solid;
+}
+
+textarea {
+  resize: vertical;
+}
+
+input::-moz-placeholder, textarea::-moz-placeholder {
+  color: #a1a1aa;
+}
+
+input:-ms-input-placeholder, textarea:-ms-input-placeholder {
+  color: #a1a1aa;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #a1a1aa;
+}
+
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
 /**
  * Reset links to optimize for opt-in styling instead of
  * opt-out.
  */
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
 
 /**
  * Reset form element properties that are easy to forget to
@@ -249,12 +456,29 @@ Add the correct display in Chrome and Safari.
  * normalize.css.
  */
 
+button,
+input,
+optgroup,
+select,
+textarea {
+  padding: 0;
+  line-height: inherit;
+  color: inherit;
+}
+
 /**
  * Use the configured 'mono' font family for elements that
  * are expected to be rendered with a monospace font, falling
  * back to the system monospace stack if there is no configured
  * 'mono' font family.
  */
+
+pre,
+code,
+kbd,
+samp {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
 
 /**
  * Make replaced elements `display: block` by default as that's
@@ -264,12 +488,398 @@ Add the correct display in Chrome and Safari.
  * https://github.com/mozdevs/cssremedy/issues/14
  */
 
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+  display: block;
+  vertical-align: middle;
+}
+
 /**
  * Constrain images and videos to the parent width and preserve
  * their instrinsic aspect ratio.
  *
  * https://github.com/mozdevs/cssremedy/issues/14
  */
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+.appearance-none {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+}
+
+.bg-gray-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgba(244, 244, 245, var(--tw-bg-opacity));
+}
+
+.bg-gray-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgba(228, 228, 231, var(--tw-bg-opacity));
+}
+
+.bg-gray-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgba(113, 113, 122, var(--tw-bg-opacity));
+}
+
+.bg-gray-800 {
+  --tw-bg-opacity: 1;
+  background-color: rgba(39, 39, 42, var(--tw-bg-opacity));
+}
+
+.hover\:bg-gray-100:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgba(244, 244, 245, var(--tw-bg-opacity));
+}
+
+.hover\:bg-gray-200:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgba(228, 228, 231, var(--tw-bg-opacity));
+}
+
+@media (prefers-color-scheme: dark) {
+  .dark\:bg-blueGray-400 {
+    --tw-bg-opacity: 1;
+    background-color: rgba(148, 163, 184, var(--tw-bg-opacity));
+  }
+
+  .dark\:bg-blueGray-500 {
+    --tw-bg-opacity: 1;
+    background-color: rgba(100, 116, 139, var(--tw-bg-opacity));
+  }
+
+  .dark\:bg-blueGray-600 {
+    --tw-bg-opacity: 1;
+    background-color: rgba(71, 85, 105, var(--tw-bg-opacity));
+  }
+
+  .dark\:bg-blueGray-800 {
+    --tw-bg-opacity: 1;
+    background-color: rgba(30, 41, 59, var(--tw-bg-opacity));
+  }
+}
+
+.bg-opacity-75 {
+  --tw-bg-opacity: 0.75;
+}
+
+.border-cyan-500 {
+  --tw-border-opacity: 1;
+  border-color: rgba(6, 182, 212, var(--tw-border-opacity));
+}
+
+.border-gray-200 {
+  --tw-border-opacity: 1;
+  border-color: rgba(228, 228, 231, var(--tw-border-opacity));
+}
+
+.border-gray-300 {
+  --tw-border-opacity: 1;
+  border-color: rgba(212, 212, 216, var(--tw-border-opacity));
+}
+
+.hover\:border-cyan-500:hover {
+  --tw-border-opacity: 1;
+  border-color: rgba(6, 182, 212, var(--tw-border-opacity));
+}
+
+.hover\:border-gray-400:hover {
+  --tw-border-opacity: 1;
+  border-color: rgba(161, 161, 170, var(--tw-border-opacity));
+}
+
+@media (prefers-color-scheme: dark) {
+  .dark\:border-lime-400 {
+    --tw-border-opacity: 1;
+    border-color: rgba(163, 230, 53, var(--tw-border-opacity));
+  }
+
+  .dark\:border-blueGray-300 {
+    --tw-border-opacity: 1;
+    border-color: rgba(203, 213, 225, var(--tw-border-opacity));
+  }
+
+  .dark\:hover\:border-lime-300:hover {
+    --tw-border-opacity: 1;
+    border-color: rgba(190, 242, 100, var(--tw-border-opacity));
+  }
+}
+
+.border-opacity-75 {
+  --tw-border-opacity: 0.75;
+}
+
+.rounded {
+  border-radius: 0.25rem;
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.rounded-xl {
+  border-radius: 0.75rem;
+}
+
+.rounded-full {
+  border-radius: 9999px;
+}
+
+.border-4 {
+  border-width: 4px;
+}
+
+.border-8 {
+  border-width: 8px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.cursor-move {
+  cursor: move;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.flex {
+  display: flex;
+}
+
+.table {
+  display: table;
+}
+
+.hidden {
+  display: none;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-around {
+  justify-content: space-around;
+}
+
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.h-10 {
+  height: 2.5rem;
+}
+
+.h-12 {
+  height: 3rem;
+}
+
+.h-32 {
+  height: 8rem;
+}
+
+.h-96 {
+  height: 24rem;
+}
+
+.h-auto {
+  height: auto;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.h-screen {
+  height: 100vh;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.text-6xl {
+  font-size: 3.75rem;
+  line-height: 1;
+}
+
+.m-2 {
+  margin: 0.5rem;
+}
+
+.mx-1 {
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+}
+
+.my-2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.my-4 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.mx-4 {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.my-6 {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.mx-8 {
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
+.min-h-screen {
+  min-height: 100vh;
+}
+
+.opacity-75 {
+  opacity: 0.75;
+}
+
+.focus\:outline-none:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.overflow-scroll {
+  overflow: scroll;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
+.overflow-y-scroll {
+  overflow-y: scroll;
+}
+
+.p-1 {
+  padding: 0.25rem;
+}
+
+.p-2 {
+  padding: 0.5rem;
+}
+
+.p-4 {
+  padding: 1rem;
+}
+
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.py-12 {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.pt-4 {
+  padding-top: 1rem;
+}
+
+.pt-12 {
+  padding-top: 3rem;
+}
+
+.pb-20 {
+  padding-bottom: 5rem;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.relative {
+  position: relative;
+}
+
+.inset-0 {
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+}
+
+.inset-x-0 {
+  right: 0px;
+  left: 0px;
+}
+
+.bottom-0 {
+  bottom: 0px;
+}
 
 * {
   --tw-shadow: 0 0 #0000;
@@ -282,6 +892,162 @@ Add the correct display in Chrome and Safari.
   --tw-ring-color: rgba(59, 130, 246, 0.5);
   --tw-ring-offset-shadow: 0 0 #0000;
   --tw-ring-shadow: 0 0 #0000;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-purple-500 {
+  --tw-text-opacity: 1;
+  color: rgba(168, 85, 247, var(--tw-text-opacity));
+}
+
+.text-indigo-500 {
+  --tw-text-opacity: 1;
+  color: rgba(99, 102, 241, var(--tw-text-opacity));
+}
+
+.text-blue-500 {
+  --tw-text-opacity: 1;
+  color: rgba(59, 130, 246, var(--tw-text-opacity));
+}
+
+.text-green-500 {
+  --tw-text-opacity: 1;
+  color: rgba(34, 197, 94, var(--tw-text-opacity));
+}
+
+.text-yellow-500 {
+  --tw-text-opacity: 1;
+  color: rgba(234, 179, 8, var(--tw-text-opacity));
+}
+
+.text-red-500 {
+  --tw-text-opacity: 1;
+  color: rgba(239, 68, 68, var(--tw-text-opacity));
+}
+
+.text-gray-300 {
+  --tw-text-opacity: 1;
+  color: rgba(212, 212, 216, var(--tw-text-opacity));
+}
+
+.text-gray-700 {
+  --tw-text-opacity: 1;
+  color: rgba(63, 63, 70, var(--tw-text-opacity));
+}
+
+.hover\:text-gray-400:hover {
+  --tw-text-opacity: 1;
+  color: rgba(161, 161, 170, var(--tw-text-opacity));
+}
+
+@media (prefers-color-scheme: dark) {
+  .dark\:text-lime-400 {
+    --tw-text-opacity: 1;
+    color: rgba(163, 230, 53, var(--tw-text-opacity));
+  }
+
+  .dark\:text-gray-200 {
+    --tw-text-opacity: 1;
+    color: rgba(228, 228, 231, var(--tw-text-opacity));
+  }
+}
+
+.align-bottom {
+  vertical-align: bottom;
+}
+
+.w-10 {
+  width: 2.5rem;
+}
+
+.w-12 {
+  width: 3rem;
+}
+
+.w-96 {
+  width: 24rem;
+}
+
+.w-10\/12 {
+  width: 83.333333%;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.transform {
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  transform: translateX(var(--tw-translate-x)) translateY(var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.hover\:scale-110:hover {
+  --tw-scale-x: 1.1;
+  --tw-scale-y: 1.1;
+}
+
+.active\:scale-75:active {
+  --tw-scale-x: .75;
+  --tw-scale-y: .75;
+}
+
+.rotate-12 {
+  --tw-rotate: 12deg;
+}
+
+.-rotate-12 {
+  --tw-rotate: -12deg;
+}
+
+.hover\:rotate-12:hover {
+  --tw-rotate: 12deg;
+}
+
+.hover\:-rotate-12:hover {
+  --tw-rotate: -12deg;
+}
+
+.hover\:-translate-y-1:hover {
+  --tw-translate-y: -0.25rem;
+}
+
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.transition {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.transition-opacity {
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.ease-in-out {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.duration-150 {
+  transition-duration: 150ms;
 }
 
 @-webkit-keyframes spin {
@@ -351,6 +1117,38 @@ Add the correct display in Chrome and Safari.
 }
 
 @media (min-width: 640px) {
+  .sm\:block {
+    display: block;
+  }
+
+  .sm\:inline-block {
+    display: inline-block;
+  }
+
+  .sm\:h-screen {
+    height: 100vh;
+  }
+
+  .sm\:my-8 {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .sm\:max-w-lg {
+    max-width: 32rem;
+  }
+
+  .sm\:p-0 {
+    padding: 0px;
+  }
+
+  .sm\:align-middle {
+    vertical-align: middle;
+  }
+
+  .sm\:w-full {
+    width: 100%;
+  }
 }
 
 @media (min-width: 768px) {
