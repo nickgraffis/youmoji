@@ -24,7 +24,7 @@
   <link rel="canonical" href="http://youmoji.app/" />
   <meta name="theme-color" content="#ffffff">
   <title>Youmoji | It's mildly entertaining...</title>
-  <link href="./tailwind.css" rel="stylesheet">
+  <link href="./tailwind.min.css" rel="stylesheet">
   <link href="./style.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Sniglet&display=swap" rel="stylesheet">
@@ -34,7 +34,7 @@
 
 <body style="font-family: 'Sniglet', cursive;" class="h-screen dark:bg-blueGray-800">
   <nav class="pb-12 pt-8 flex items-center justify-between w-full">
-    <div class="transform duration-150 hover:-translate-y-1 hover:-rotate-12 icon mx-12"> &nbsp;</div>
+    <div class="hidden lg:inline-flex md:inline-flex transform duration-150 hover:-translate-y-1 hover:-rotate-12 icon mx-12"> &nbsp;</div>
     <div class="lg:text-6xl md:text-6xl text-4xl flex-grow flex items-center justify-center mb-6">
       <span class="text-purple-500 transform -rotate-12 mx-1" style="font-family: 'Bungee Shade', cursive;">Y</span>
       <span class="text-yellow-500 transform rotate-12 mx-1" style="font-family: 'Bungee Shade', cursive;">O</span>
@@ -45,7 +45,7 @@
       <span class="text-purple-500 transform -rotate-12 mx-1" style="font-family: 'Bungee Shade', cursive;">I</span>
       <span class="text-red-500 transform rotate-12 mx-1" style="font-family: 'Bungee Shade', cursive;">?</span>
     </div>
-    <div id="dm" onclick="darkMode()" class="transform duration-150 hover:-translate-y-1 icon mx-12 text-xl lg:text-2xl md:text-2xl self-start cursor-pointer">🌗</div>
+    <div id="dm" onclick="darkMode()" class="hidden lg:inline-flex md:inline-flex transform duration-150 hover:-translate-y-1 icon mx-12 text-xl lg:text-2xl md:text-2xl self-start cursor-pointer">🌗</div>
   </nav>
   <section class="flex flex-col sm:flex-col lg:flex-row md:flex-col justify-center items-center">
     <section class="mx-8 flex flex-col items-center">
@@ -110,7 +110,7 @@
     <div class="flex items-center justify-center">Emoji parts by &nbsp;<a href="https://twemoji.twitter.com" class="hover:text-gray-400 duration-150 transform hover:-translate-y-1 ul"> twemoji </a>, they rock!</div>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.3.2/dist/confetti.browser.min.js"></script>
-  <script src="main.js"></script>
+  <script src="main.min.js"></script>
 </body>
 
 </html>

@@ -176,12 +176,6 @@ window.uploadCustom = () => {
 * Fill area with parts to choose from
 */
 window.fillOptions = (key) => {
-  const imageExists = (image_url) => {
-    let http = new XMLHttpRequest()
-    http.open('HEAD', image_url, false)
-    http.send()
-    return http.status != 404
-  }
   optionsArea.innerHTML = ''
   let amount
   if (key == 'head') {
@@ -203,11 +197,7 @@ window.fillOptions = (key) => {
     img.classList = 'part transform duration-150 hover:-rotate-12 hover:scale-110 active:scale-75'
     div.classList = 'flex items-center justify-center bg-gray-200 border-gray-300 border-4 w-12 h-12 m-2 hover:border-gray-400 hover:bg-gray-100 rounded-full cursor-pointer'
     div.innerHTML = img.outerHTML
-    if (imageExists(img.src)) {
-      optionsArea.append(div)
-    } else {
-      img.remove()
-    }
+    optionsArea.append(div)
   }
   checkForParts()
 }
