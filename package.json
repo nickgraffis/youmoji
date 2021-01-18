@@ -1,5 +1,5 @@
 {
-  "name": "custoji",
+  "name": "youmoji",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -14,8 +14,10 @@
     "browserify": "^17.0.0",
     "dom-to-image": "^2.6.0",
     "file-saver": "^2.0.5",
+    "shake.js": "^1.2.2",
     "sortablejs": "^1.13.0",
     "tailwindcss": "^2.0.2",
+    "tailwindcss-animatecss": "^1.0.7",
     "uuid": "^8.3.2"
   }
 }
