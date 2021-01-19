@@ -1,6 +1,7 @@
 {
-    "name": "",
-    "short_name": "",
+    "name": "Youmoji",
+    "short_name": "youmoji",
+    "description": "A custom emoji generator, perfect for Slack, Twitch, Discord, and fun! Use preloaded twemoji parts to build your own, or choose from random!",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
